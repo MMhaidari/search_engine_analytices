@@ -1,0 +1,26 @@
+<div class="main-container">
+    <h1>Search Analytics Engine</h1>
+
+    <%= form_with(url: articles_path, method: :get, data: { controller: "search-form", turbo_frame: "articles", turbo_action: "advance" }) do |form| %>
+      <div class="search-container">
+        <%= form.text_field :query, autocomplete: :off, data: { action: "input->search-form#search" }, placeholder: 'Search...', class: 'search-input' %>
+      </div>
+      <h3><span>Trends:</span> AI, SpaceX, Amazon.</h3>
+    <% end %>
+
+    <div class="articles-container">
+      <h2 class='heading-articles'> List of articles </h2>
+      <% @articles.each do |article| %>
+        <p class="article-title"><%= article.title %></p>
+      <% end %>
+    </div>
+
+    <% if current_user %>
+      <div class="recent-searches">
+        <h3>Recent Searches by <%= current_user.user_ip %>:</h3>
+        <% current_user.searches.order(created_at: :desc).limit(5).each do |search| %>
+          <p class="recent-search-item"><%= search.query %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>

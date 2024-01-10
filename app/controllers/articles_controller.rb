@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
     def index
         if query_param.present? 
-          search_create if  query_param.length >= 3
+          search_create if  query_param.length >= 2
       
           @articles = Article.search_title(query_param).limit(50)
         else
@@ -31,7 +31,6 @@ class ArticlesController < ApplicationController
   def create_new_search_record
     Search.create(query: query_param, user: current_user, ip_address: current_user.ip_address)
   end
-
   
   def update_existing_search_record
     latest_search.update(query: query_param)
