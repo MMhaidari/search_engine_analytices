@@ -1,19 +1,17 @@
 class ArticlesController < ApplicationController
-    def index
-        if query_param.present? 
-          search_create if  query_param.length >= 2
-      
-          @articles = Article.search_title(query_param).limit(50)
-        else
-          @articles = Article.limit(9)
-        end
-      end
-      
+  def index
+    if query_param.present? 
+      search_create if query_param.length >= 2
+      @articles = Article.search_title(query_param).limit(50)
+    else
+      @articles = Article.limit(9)
+    end
+  end
 
   private
 
   def search_create
-    if latest_search.nil? || !matched_articles(latest_search.query, query_param)
+    if latest_search.nil? || !matched_articles(latest_search&.query, query_param)
       Search.create(query: query_param.strip, user: current_user)
     else
       latest_search.update(query: query_param)
@@ -33,7 +31,7 @@ class ArticlesController < ApplicationController
   end
   
   def update_existing_search_record
-    latest_search.update(query: query_param)
+    latest_search&.update(query: query_param)
   end
 
   def matched_articles(str1, str2)
