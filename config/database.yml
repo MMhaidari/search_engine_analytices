@@ -82,6 +82,6 @@ test:
 #
 production:
   <<: *default
-  database: search_engine_analytices_production
-  username: search_engine_analytices
+  database: search_engine_cbas
+  username: search_engine_cbas_user
   password: <%= ENV["SEARCH_ENGINE_ANALYTICES_DATABASE_PASSWORD"] %>
