@@ -75,3 +75,9 @@ group :test do
 end
 
 gem "tailwindcss-rails", "~> 2.2"
+
+gem "searchkick"
+
+gem "elasticsearch"
+
+gem "faker"

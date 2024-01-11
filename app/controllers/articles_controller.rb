@@ -1,42 +1,72 @@
 class ArticlesController < ApplicationController
+  before_action :set_article, only: %i[ show edit update destroy ]
+
+  # GET /articles or /articles.json
   def index
-    if query_param.present? 
-      search_create if query_param.length >= 2
-      @articles = Article.search_title(query_param).limit(50)
-    else
-      @articles = Article.limit(9)
+    @articles = Article.all
+  end
+
+  # GET /articles/1 or /articles/1.json
+  def show
+  end
+
+  # GET /articles/new
+  def new
+    @article = Article.new
+  end
+
+  # GET /articles/1/edit
+  def edit
+  end
+
+  # POST /articles or /articles.json
+  def create
+    @article = Article.new(article_params)
+
+    respond_to do |format|
+      if @article.save
+        format.html { redirect_to article_url(@article), notice: "Article was successfully created." }
+        format.json { render :show, status: :created, location: @article }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /articles/1 or /articles/1.json
+  def update
+    respond_to do |format|
+      if @article.update(article_params)
+        format.html { redirect_to article_url(@article), notice: "Article was successfully updated." }
+        format.json { render :show, status: :ok, location: @article }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @article.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /articles/1 or /articles/1.json
+  def destroy
+    @article.destroy!
+
+    respond_to do |format|
+      format.html { redirect_to articles_url, notice: "Article was successfully destroyed." }
+      format.json { head :no_content }
     end
   end
 
   private
-
-  def search_create
-    if latest_search.nil? || !matched_articles(latest_search&.query, query_param)
-      Search.create(query: query_param.strip, user: current_user)
-    else
-      latest_search.update(query: query_param)
+    # Use callbacks to share common setup or constraints between actions.
+    def set_article
+      @article = Article.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to root_path
     end
-  end
 
-  def latest_search
-    @latest_search ||= Search.latest_search(current_user)
-  end
-
-  def query_param
-    params[:query]&.strip
-  end
-
-  def create_new_search_record
-    Search.create(query: query_param, user: current_user, ip_address: current_user.ip_address)
-  end
-  
-  def update_existing_search_record
-    latest_search&.update(query: query_param)
-  end
-
-  def matched_articles(str1, str2)
-    winkler = Amatch::JaroWinkler.new(str1)
-    similarity_distance = winkler.match(str2)
-    similarity_distance > 0.7
-  end
+    # Only allow a list of trusted parameters through.
+    def article_params
+      params.require(:article).permit(:title, :body)
+    end
 end
