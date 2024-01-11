@@ -30,8 +30,6 @@
     <ul>
         <li>What is a good car?</li>
     </ul>
-    <h2>🚀 Live Version</h2>
-    <p><a href="#" target="_blank">SimpleSearch App</a> - Insert the link to your live version here.</p>
     <h2>Getting Started</h2>
     <p>This section provides a guide to get started with the SimpleSearch App.</p>
     <h3>Prerequisites</h3>
