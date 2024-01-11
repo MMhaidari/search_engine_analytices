@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   resources :articles
-  resources :searches
-
+  post 'search', to: 'search#index', as: :search
+  post 'search/suggestions', to: 'search#suggestions', as: :search_suggestions
+  get 'recent_searches_by_user', to: 'search#recent_searches_by_user', as: :recent_searches_by_user
   # Defines the root path route ("/")
   root "articles#index"
 end

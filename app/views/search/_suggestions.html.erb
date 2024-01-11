@@ -1,0 +1,9 @@
+<% if results.any? %>
+    <div>
+    <% results.each do |article|%>
+        <div>
+            <%= link_to article.title, article %>
+        </div>
+    <% end %>
+    </div>
+<% end %>
